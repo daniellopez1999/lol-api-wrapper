@@ -412,3 +412,8 @@ export interface MatchDto {
   metadata: MetadataDto;
   info: InfoDto;
 }
+
+export interface SummonerRiotAccount {
+  summoner: SummonerDto;
+  riotAccount: RiotAccountDto;
+}

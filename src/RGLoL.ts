@@ -43,6 +43,22 @@ export class LeagueOfLegendsApiWrapper {
     }
   }
 
+  async getAccountByPUUID(PUUID: string): Promise<RiotAccountDto> {
+    const request = await axios.get(
+      `https://${this.REGION.toLowerCase()}.api.riotgames.com/riot/account/v1/accounts/by-puuid/${PUUID}?${
+        this.USE_API_KEY
+      }`
+    );
+    return request.data as RiotAccountDto;
+  }
+
+  async getSummonerByPUUID(PUUID: string): Promise<SummonerDto> {
+    const request = await axios.get(
+      `${this.LOL_BASE_URL}/summoner/v4/summoners/by-puuid/${PUUID}?${this.USE_API_KEY}`
+    );
+    return request.data;
+  }
+
   async getSummonerByNameAndTag(
     data: GetSummonerByNameAndTag
   ): Promise<SummonerDto> {
@@ -52,11 +68,9 @@ export class LeagueOfLegendsApiWrapper {
         tag: data.tag,
       });
 
-      const request = await axios.get(
-        `${this.LOL_BASE_URL}/summoner/v4/summoners/by-puuid/${account.puuid}?${this.USE_API_KEY}`
-      );
+      const summoner = await this.getSummonerByPUUID(account.puuid);
 
-      return request.data as SummonerDto;
+      return summoner as SummonerDto;
     } catch (error) {
       console.error(error);
       throw new Error('error');
