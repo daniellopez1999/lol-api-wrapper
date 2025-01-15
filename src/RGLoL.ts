@@ -1,14 +1,20 @@
 import axios from 'axios';
-import { GetSummonerByNameAndTag, RiotAccountDto, SummonerDto } from './types';
+import {
+  GetSummonerByNameAndTag,
+  RiotAccountDto,
+  SummonerDto,
+  LoLApiWrapperConstructor,
+} from './types';
 
 export class LeagueOfLegendsApiWrapper {
   API_KEY: string;
   USE_API_KEY: string;
   RIOT_URL: string = 'https://europe.api.riotgames.com';
-  EUW1_URL: string = 'https://euw1.api.riotgames.com/lol';
-  constructor(API_KEY: string) {
-    this.API_KEY = API_KEY;
+  LOL_BASE_URL: string;
+  constructor(params: LoLApiWrapperConstructor) {
+    this.API_KEY = params.API_KEY;
     this.USE_API_KEY = `api_key=${this.API_KEY}`;
+    this.LOL_BASE_URL = `https://${params.region.toLowerCase()}.api.riotgames.com/lol`;
   }
 
   async getAccountByNameAndTag(
@@ -35,9 +41,12 @@ export class LeagueOfLegendsApiWrapper {
         name: data.name,
         tag: data.tag,
       });
-
+      console.log(
+        'LOG',
+        `${this.LOL_BASE_URL}/summoner/v4/summoners/by-puuid/${account.puuid}?${this.USE_API_KEY}`
+      );
       const request = await axios.get(
-        `${this.EUW1_URL}/summoner/v4/summoners/by-puuid/${account.puuid}?${this.USE_API_KEY}`
+        `${this.LOL_BASE_URL}/summoner/v4/summoners/by-puuid/${account.puuid}?${this.USE_API_KEY}`
       );
       return request.data as SummonerDto;
     } catch (error) {

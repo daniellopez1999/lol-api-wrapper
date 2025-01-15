@@ -17,3 +17,8 @@ export interface SummonerDto {
   revisionDate: number;
   summonerLevel: number;
 }
+
+export interface LoLApiWrapperConstructor {
+  API_KEY: string;
+  region: string;
+}
