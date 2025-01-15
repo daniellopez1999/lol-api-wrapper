@@ -1,4 +1,4 @@
-export enum Region {
+export enum RiotServer {
   BR1 = 'BR1',
   EUN1 = 'EUN1',
   EUW1 = 'EUW1',
@@ -17,3 +17,30 @@ export enum Region {
   TW2 = 'TW2',
   VN2 = 'VN2',
 }
+
+export enum RiotRegion {
+  AMERICAS = 'AMERICAS',
+  ASIA = 'ASIA',
+  EUROPE = 'EUROPE',
+  SEA = 'SEA',
+}
+
+export const RiotServerToRegion: { [key in RiotServer]: RiotRegion } = {
+  [RiotServer.BR1]: RiotRegion.AMERICAS,
+  [RiotServer.EUN1]: RiotRegion.EUROPE,
+  [RiotServer.EUW1]: RiotRegion.EUROPE,
+  [RiotServer.JP1]: RiotRegion.ASIA,
+  [RiotServer.KR]: RiotRegion.ASIA,
+  [RiotServer.LA1]: RiotRegion.AMERICAS,
+  [RiotServer.LA2]: RiotRegion.AMERICAS,
+  [RiotServer.ME1]: RiotRegion.EUROPE,
+  [RiotServer.NA1]: RiotRegion.AMERICAS,
+  [RiotServer.OC1]: RiotRegion.SEA,
+  [RiotServer.PH2]: RiotRegion.SEA,
+  [RiotServer.RU]: RiotRegion.EUROPE,
+  [RiotServer.SG2]: RiotRegion.SEA,
+  [RiotServer.TH2]: RiotRegion.SEA,
+  [RiotServer.TR1]: RiotRegion.EUROPE,
+  [RiotServer.TW2]: RiotRegion.SEA,
+  [RiotServer.VN2]: RiotRegion.SEA,
+};

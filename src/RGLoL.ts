@@ -4,17 +4,27 @@ import {
   RiotAccountDto,
   SummonerDto,
   LoLApiWrapperConstructor,
+  MatchDto,
 } from './types';
+import { RiotRegion, RiotServer, RiotServerToRegion } from './types/constants';
 
 export class LeagueOfLegendsApiWrapper {
   API_KEY: string;
   USE_API_KEY: string;
-  RIOT_URL: string = 'https://europe.api.riotgames.com';
+  REGION: RiotRegion;
+  SERVER: RiotServer;
+  RIOT_URL: string;
   LOL_BASE_URL: string;
   constructor(params: LoLApiWrapperConstructor) {
+    if (!params.API_KEY) {
+      throw new Error('No API Key provided');
+    }
     this.API_KEY = params.API_KEY;
     this.USE_API_KEY = `api_key=${this.API_KEY}`;
-    this.LOL_BASE_URL = `https://${params.region.toLowerCase()}.api.riotgames.com/lol`;
+    this.LOL_BASE_URL = `https://${params.server.toLowerCase()}.api.riotgames.com/lol`;
+    this.SERVER = params.server;
+    this.REGION = RiotServerToRegion[params.server as RiotServer];
+    this.RIOT_URL = `https://${this.REGION.toLowerCase()}.api.riotgames.com`;
   }
 
   async getAccountByNameAndTag(
@@ -41,17 +51,38 @@ export class LeagueOfLegendsApiWrapper {
         name: data.name,
         tag: data.tag,
       });
-      console.log(
-        'LOG',
-        `${this.LOL_BASE_URL}/summoner/v4/summoners/by-puuid/${account.puuid}?${this.USE_API_KEY}`
-      );
+
       const request = await axios.get(
         `${this.LOL_BASE_URL}/summoner/v4/summoners/by-puuid/${account.puuid}?${this.USE_API_KEY}`
       );
+
       return request.data as SummonerDto;
     } catch (error) {
       console.error(error);
       throw new Error('error');
     }
+  }
+
+  async getMatchesIDByNameAndTag(
+    data: GetSummonerByNameAndTag
+  ): Promise<string[]> {
+    const { name, tag } = data;
+    const account = await this.getAccountByNameAndTag({ name: name, tag: tag });
+
+    const request = await axios.get(
+      `https://${this.REGION.toLowerCase()}.api.riotgames.com/lol/match/v5/matches/by-puuid/${
+        account.puuid
+      }/ids?${this.USE_API_KEY}`
+    );
+    return request.data as string[];
+  }
+
+  async getMatchByID(matchID: string) {
+    const request = await axios.get(
+      `https://${this.REGION.toLowerCase()}.api.riotgames.com/lol/match/v5/matches/${matchID}?${
+        this.USE_API_KEY
+      }`
+    );
+    return request.data as MatchDto;
   }
 }
