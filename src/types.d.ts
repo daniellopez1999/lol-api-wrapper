@@ -246,6 +246,18 @@ export interface ChallengesDto {
   wardTakedownsBefore20M: number;
 }
 
+export interface BasicParticipantData {
+  championName: string;
+  championId: number;
+  assists: number;
+  kills: number;
+  deaths: number;
+  itemsPurchased: number;
+  puuid: string;
+  riotIdGameName: string;
+  items: number[];
+}
+
 export interface ParticipantDto {
   allInPings: number;
   assistMePings: number;
@@ -416,4 +428,9 @@ export interface MatchDto {
 export interface SummonerRiotAccount {
   summoner: SummonerDto;
   riotAccount: RiotAccountDto;
+}
+
+export interface ItemWithImage {
+  image: string;
+  itemID: number;
 }

@@ -2,6 +2,8 @@ import { LeagueOfLegendsApiWrapper } from './RGLoL';
 import dotenv from 'dotenv';
 import { RiotServer } from './types/constants';
 import { MatchDto, SummonerDto, SummonerRiotAccount } from './types';
+import { MatchHelper } from './MatchHelper';
+import { ItemsHelper } from './ItemsHelper';
 dotenv.config();
 
 const mockDataFE = {
@@ -34,6 +36,13 @@ async function getMatchData() {
     particiantsData.push({ riotAccount: account, summoner: summoner });
   }
   console.log('participantsData', particiantsData);
+  console.log('info.participants', match.info.participants);
+
+  const basicDataFromParticipants = MatchHelper.getBasicDataFromParticipants(
+    match.info.participants
+  );
+  console.log('basicDataFromParticipants', basicDataFromParticipants);
+  console.log('testImage', ItemsHelper.getImagesFromItems([1004, 1006, 1018]));
   return match;
 }
 
